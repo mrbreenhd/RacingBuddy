@@ -8,9 +8,25 @@
     <script src="https://cdn.socket.io/4.4.0/socket.io.min.js" integrity="sha384-1fOn6VtTq3PWwfsOrk45LnYcGosJwzMHv+Xh/Jx5303FVOXzEnw0EpLv30mtjmlj" crossorigin="anonymous"></script>
 
 </head>
+<style>
+    #steeringangle {
+        max-width: 7%;
+    }
+</style>
 <body>
+    <h1 id="ontrack">Car Not On Track</h1>
+    <p id="throttle">Car Not On Track</p>
+    <p id="brake">Car Not On Track</p>
+    <p id="clutch">Car Not On Track</p>
+    <p id="rpm">Car Not On Track</p>
+    <p id="gear">Car Not On Track</p>
+    <p id="inc">Car Not On Track</p>
+    <p id="fuelpct">Car Not On Track</p>
+    <p id="abssts">Car Not On Track</p>
+    <p id="wheelangle">Car Not On Track</p>
+    <p id="pitlimiter">Car Not On Track</p>
+    <img id="steeringangle" style="transform: rotate(0deg);" src="icon.png">
    <canvas id="myChart"></canvas>
-   
 </body>
 <script>
 //////////////Normal Code///////////////
@@ -68,10 +84,32 @@ socket.on('sim_disc', function (data) {
 
 socket.on('broadcast', function (telemetry) {
     var telm = JSON.parse(telemetry) 
-    var old_lap = telm.lap
-    console.log(`Old Lap: ${old_lap}. Current Lap: ${telm.lap}`);
+
+    document.getElementById("throttle").innerHTML = "Throttle: " + Math.round(telm.Throttle * 100);
+    document.getElementById("brake").innerHTML = "Brake: " + Math.round(telm.Brake * 100);
+    document.getElementById("clutch").innerHTML = "Clutch: " + Math.round(telm.Clutch * 100);
+    document.getElementById("rpm").innerHTML = "RPM: " + Math.round(telm.RPM);
+    document.getElementById("gear").innerHTML = "Gear: " + telm.Gear;
+    document.getElementById("inc").innerHTML = "INC: " + telm.PlayerCarDriverIncidentCount;
+    document.getElementById("fuelpct").innerHTML = "Fuel %: " + Math.round(telm.FuelLevelPct *100)
+    if(telm.BrakeABSactive == true){
+        document.getElementById("abssts").innerHTML = "ABS ACTIVE"
+    }else{
+        document.getElementById("abssts").innerHTML = "ABS NOT ACTIVE"
+    }
+
+    document.getElementById("wheelangle").innerHTML = "Wheel Angle: " + Math.round(telm.SteeringWheelAngle * 100)
+
+    if(telm.dcPitSpeedLimiterToggle == false){
+        document.getElementById("pitlimiter").innerHTML = "PIT LIMITER OFF"
+    }else if(telm.dcPitSpeedLimiterToggle == true){
+        document.getElementById("pitlimiter").innerHTML = "PIT LIMITER ON"
+    }
+
     
-    
+    document.getElementById("steeringangle").style.transform = "rotate("+ Math.round(telm.SteeringWheelAngle * -100) + "deg)"; 
+
+
     // setInterval(function(){
     //     myChart.data.datasets[0].data[0] = norm(telm.Throttle); //Throttle
     //     myChart.data.datasets[0].data[1] = norm(telm.Brake); //Brake
