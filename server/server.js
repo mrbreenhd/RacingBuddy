@@ -9,6 +9,11 @@ var io = require('socket.io')(server, {
   }
 });
 
+const fs = require('fs');
+
+let rawdata = fs.readFileSync('server.json');
+let server_data = JSON.parse(rawdata);
+
 var usernames = {};
 
 
@@ -16,8 +21,9 @@ io.on('connection', function(socket) {
   socket.on('adduser', function(username) {
     socket.username = username;
     usernames[username] = username;
-    socket.emit('updatechat', `SERVER: Connected. Hello ${username}`);
+    socket.emit('log_user', `SERVER: Connected. Hello ${username}`);
     console.log(`${username} has connected`);
+    socket.emit('speed', server_data.update);
   });
 
   socket.on('telemetry', function(data){
