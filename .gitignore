@@ -1,3 +1,4 @@
 /old
 /socketio_test
 /node_modules
+*.exe
