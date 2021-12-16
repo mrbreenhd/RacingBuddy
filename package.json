@@ -1,0 +1,27 @@
+{
+  "name": "racingbuddy",
+  "version": "0.0.1",
+  "description": "websocket for iRacing",
+  "main": "/client/client.js",
+  "dependencies": {
+    "express": "^4.17.1",
+    "node-irsdk": "^2.1.6",
+    "socket.io-client": "^4.4.0",
+    "socket.io": "^4.4.0",
+    "ws": "^8.3.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mrbreenhd/RacingBuddy.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mrbreenhd/RacingBuddy/issues"
+  },
+  "homepage": "https://github.com/mrbreenhd/RacingBuddy#readme"
+}
