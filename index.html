@@ -46,7 +46,7 @@
 // });
 
 
-var socket = io.connect('http://localhost:3000');
+var socket = io.connect('http://192.168.0.4:3000');
 var user_data = "Website"
 
 socket.on('connect', function(){
@@ -56,6 +56,15 @@ socket.on('connect', function(){
 socket.on('updatechat', function (data) {
     console.log(data);
 });
+
+socket.on('sim_con', function (data) {
+    console.log(data);
+});
+
+socket.on('sim_disc', function (data) {
+    console.log(data);
+});
+
 
 socket.on('broadcast', function (telemetry) {
     var telm = JSON.parse(telemetry) 
