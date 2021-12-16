@@ -5,30 +5,42 @@ const fs = require('fs');
 let rawdata = fs.readFileSync('user.json');
 let user_data = JSON.parse(rawdata);
 
-var iracing = irsdk.init({telemetryUpdateInterval: user_data.update})
-
 var socket = io(`ws://${user_data.ip}:${user_data.port}`, {transports: ['websocket']});
 socket.on('connect', function () {
   socket.emit('adduser', user_data.name);
 });
 
-socket.on('updatechat', function (data) {
+socket.on('log_user', function (data) {
   console.log(data);
 });
 
-iracing.on('Telemetry', function (evt) {
+
+socket.on('speed', function socketspeed(data){
+  iracing = irsdk.init({telemetryUpdateInterval: data})
+
+  console.log(`Logging at ${data}ms`);
+
+
+  iracing.on('Telemetry', function (evt) {
     socket.emit('telemetry',JSON.stringify(evt.values))
+  })
+
+  iracing.on('Connected', function () {
+    socket.emit('sim_con', "Start")
+    console.log("Sim Connected");
+  })
+  
+  iracing.on('Disconnected', function () {
+    socket.emit('sim_disc', "Stop")
+    console.log("Sim Disconnected");
+  })
+
 })
 
-iracing.on('Connected', function () {
-  socket.emit('sim_con', "Start")
-  console.log("Sim Connected");
-})
 
-iracing.on('Disconnected', function () {
-  socket.emit('sim_disc', "Stop")
-  console.log("Sim Disconnected");
-})
+
+
+
 
 
 
@@ -45,4 +57,4 @@ socket.io.on("reconnect", (attempt) => {
   console.log(`Reconnecting...After ${attempt} attempt(s)`);
 });
 
-console.clear();
+//console.clear();
