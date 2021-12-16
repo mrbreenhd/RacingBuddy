@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Socket Things</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <script src="https://cdn.socket.io/4.4.0/socket.io.min.js" integrity="sha384-1fOn6VtTq3PWwfsOrk45LnYcGosJwzMHv+Xh/Jx5303FVOXzEnw0EpLv30mtjmlj" crossorigin="anonymous"></script>
+
+</head>
+<body>
+   <canvas id="myChart"></canvas>
+   
+</body>
+<script>
+//////////////Normal Code///////////////
+// var myChart = new Chart(document.getElementById("myChart"), {
+//   type: "bar",
+//   data: {
+//     labels: ['throttle', 'brake'],
+//     datasets: [
+//       {
+//         data: [0,0],
+//         label: "%",
+//         borderColor: "#FFFFFF",
+//         fill: false
+//       },
+//     ]
+//   },
+//   options: {
+//     animation: {
+//         duration: 0
+//     },
+//     scales: {
+//         y: {
+//             beginAtZero: true,
+//         },
+//         yAxes : [{
+//             ticks : {
+//                 max : 100,    
+//                 min : 0
+//             }
+//         }]
+//     }
+//   }
+// });
+
+
+var socket = io.connect('http://localhost:3000');
+var user_data = "Website"
+
+socket.on('connect', function(){
+   socket.emit('adduser', user_data);
+});
+
+socket.on('updatechat', function (data) {
+    console.log(data);
+});
+
+socket.on('broadcast', function (telemetry) {
+    var telm = JSON.parse(telemetry) 
+    var old_lap = telm.lap
+    console.log(`Old Lap: ${old_lap}. Current Lap: ${telm.lap}`);
+    
+    
+    // setInterval(function(){
+    //     myChart.data.datasets[0].data[0] = norm(telm.Throttle); //Throttle
+    //     myChart.data.datasets[0].data[1] = norm(telm.Brake); //Brake
+    //     myChart.update();
+    // }, 3000);
+});
+
+
+///////////////////ERRORS///////////////////////
+socket.on("disconnect", (reason) => {
+    console.log(`SERVER: ${reason}. attempting to reconnect`);
+});
+
+socket.on("connect_error", (error) => {
+    console.log(`SERVER: Unable to connect. ${error}`);
+});
+
+socket.io.on("reconnect_attempt", (attempt) => {
+  console.log(`Attempting to reconnect. Attempt: ${attempt}`);
+});
+
+socket.io.on("reconnect", (attempt) => {
+  console.log(`Reconnecting...After ${attempt} attempt(s)`);
+  console.clear();
+});
+
+
+
+
+
+
+/////////////////////////////
+function norm(x){
+   return Math.round(x* 100);
+}
+
+</script>
+</html>
