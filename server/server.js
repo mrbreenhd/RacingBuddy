@@ -28,7 +28,6 @@ io.on('connection', function(socket) {
   socket.on('disconnect', function() {
     delete usernames[socket.username];
     io.sockets.emit('updateusers', usernames);
-    //socket.broadcast.emit('updatechat', `SERVER: ${socket.username} has disconnected`);
     console.log(`SERVER: ${socket.username} has disconnected`)
 
   });
