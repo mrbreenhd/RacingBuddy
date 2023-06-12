@@ -1,5 +1,5 @@
 const io = require("socket.io-client");
-var irsdk = require('node-irsdk')
+var irsdk = require('node-irsdk-2021')
 const fs = require('fs');
 
 let rawdata = fs.readFileSync('user.json');
